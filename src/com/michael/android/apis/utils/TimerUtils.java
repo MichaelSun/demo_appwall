@@ -12,6 +12,7 @@ public class TimerUtils {
     
     public static void startAutoSendMessage(Context context, long last_time) {
         cancelAutoSendMessage(context);
+        Config.LOGD("[[startAutoSendMessage]] >>>>>>");
         Intent intent = new Intent(context, CheckPointReceiver.class);
         intent.setAction(Config.ACTION_TIMER_CHECK);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
@@ -33,6 +34,7 @@ public class TimerUtils {
     }
     
     public static void cancelAutoSendMessage(Context context) {
+        Config.LOGD("[[cancelAutoSendMessage]]");
         Intent intent = new Intent(context, CheckPointReceiver.class);
         intent.setAction(Config.ACTION_TIMER_CHECK);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);

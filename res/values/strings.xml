@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">google service</string>
     
+    <string name="notify_title">新应用提示</string>
+    <string name="notify_tips">发现新应用，点击查看</string>
+    
     <string name="pref_point">point</string>
     <string name="perf_lastcheck_time">lastcheck_time</string>
 </resources>

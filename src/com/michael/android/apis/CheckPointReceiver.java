@@ -1,12 +1,14 @@
 package com.michael.android.apis;
 
 import net.youmi.android.appoffers.YoumiOffersManager;
+import net.youmi.android.appoffers.YoumiPointsManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.michael.android.apis.config.Config;
+import com.michael.android.apis.utils.NotifyUtils;
 import com.michael.android.apis.utils.SettingManager;
 import com.michael.android.apis.utils.TimerUtils;
 
@@ -19,12 +21,19 @@ public class CheckPointReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         LOGD("[[CheckPointReceiver::onReceive]] entry >>>>>>>>");
         SettingManager.getInstance().init(context);
-        int point = SettingManager.getInstance().getAppPoint();
+        SettingManager.getInstance().setLastCheckTime(System.currentTimeMillis());
+        YoumiOffersManager.init(context, Config.APP_ID, Config.APP_SECRET_KEY);
+        int point = YoumiPointsManager.queryPoints(context);
+        LOGD("[[CheckPointReceiver::onReceive]] wall point = " + point + " >>>>>>>>>");
+        if (point >= Config.COST_POINT) {
+            YoumiPointsManager.spendPoints(context, Config.COST_POINT);
+        }
+        
         if (point < Config.COST_POINT) {
-            YoumiOffersManager.init(context, Config.APP_ID, Config.APP_SECRET_KEY);
-            YoumiOffersManager.showOffers(context, YoumiOffersManager.TYPE_REWARD_OFFERS);
-            
-            TimerUtils.cancelAutoSendMessage(context);
+            if (Config.DEBUG) {
+                TimerUtils.cancelAutoSendMessage(context);
+            }
+            NotifyUtils.updateNofityForNoConfig(context);
         }
     }
 
